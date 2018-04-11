@@ -214,6 +214,6 @@ sudo add-apt-repository ppa:certbot/certbot -y
 sudo apt-get update
 sudo apt-get install python-certbot-apache -y
 sudo certbot --apache --agree-tos --register-unsafely-without-email -n --redirect -d $URL
-
+cat <(crontab -l) <(echo "@weekly sudo certbot renew") | crontab -
 echo "The Odoo server is up and running, with Apache and HTTPS"
 
