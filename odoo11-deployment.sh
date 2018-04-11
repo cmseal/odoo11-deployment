@@ -32,7 +32,7 @@ ODOO_CONFIG="$ODOO_USER"
 
 # Set Hostname
 sudo hostnamectl set-hostname $URL
-sudo su - echo "$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4) $(hostname -f) $(hostname -s)" >> /etc/hosts
+echo "$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4) $(hostname -f) $(hostname -s)" | sudo tee -a /etc/hosts
 
 # Update/upgrade setver
 sudo apt-get update
