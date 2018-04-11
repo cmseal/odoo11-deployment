@@ -234,9 +234,5 @@ sudo mv ~/$(hostname).conf /etc/apache2/sites-available/
 sudo a2ensite $(hostname).conf
 sudo service apache2 reload
 
-echo "-----------------------------------------------------------"
-echo "Done! The Odoo server is up and running."
-echo "Start Odoo service: sudo service $ODOO_CONFIG start"
-echo "Stop Odoo service: sudo service $ODOO_CONFIG stop"
-echo "Restart Odoo service: sudo service $ODOO_CONFIG restart"
-echo "-----------------------------------------------------------"
+echo "The Odoo server is up and running, with Apache."
+
