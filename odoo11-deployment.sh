@@ -1,20 +1,14 @@
 #!/bin/bash
-################################################################################
+################################################
 # Script for installing Odoo on Ubuntu 16.04
-#-------------------------------------------------------------------------------
-# This script will install Odoo on your Ubuntu 16.04 server. It can install
-# multiple Odoo instances in one Ubuntu because of the different xmlrpc_ports
-#-------------------------------------------------------------------------------
-# Make a new file:
-# sudo nano odoo-install.sh
-# Place this content in it and then make the file executable:
-# sudo chmod +x odoo-install.sh
-# Execute the script to install Odoo the version you require:
-# ./odoo-install 10 or ./odoo-install 11
-################################################################################
+# Just pass a URL intended to reach the instance
+#-----------------------------------------------
+# sudo chmod +x odoo-deployment.sh
+# Execute the script
+# ./odoo-deployment.sh www.test.com
+################################################
 
-#Choose the Odoo version which you want to install. For example: 11.0, 10.0. When using 'master' the master version will be installed.
-#IMPORTANT! This script contains extra libraries that are specifically needed for Odoo 11.0
+#You can install Odoo 10, if you wish...
 OE_VERSION="$11"
 
 if [$OE_VERSION != 10 && $OE_VERSION != 11 ]; then
@@ -245,11 +239,6 @@ sudo cat <<EOF > ~/$(hostname).conf
             AllowOverride All
             Require all granted
       </Directory>
-
-      <Location /web/database/>
-            Order deny,allow
-            Deny from all
-      </Location>
       
 </Virtualhost>
 EOF
