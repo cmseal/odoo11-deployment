@@ -8,15 +8,6 @@
 # ./odoo-deployment.sh www.test.com
 ################################################
 
-#You can install Odoo 10, if you wish...
-ODOO_VERSION=11
-
-if ((($ODOO_VERSION!=10) && ($ODOO_VERSION != 11))); then
-  echo "Odoo version is invalid, please enter either 10 or 11"
-  exit 1
-fi
-
-
 URL=$1
 
 if [ "$URL" = "" ]; then
@@ -85,23 +76,13 @@ sudo chown $ODOO_USER:$ODOO_USER /var/log/$ODOO_USER
 sudo service apache2 reload
 
 # Install Odoo
-if (($ODOO_VERSION == 10)); then
-  if ! sudo git clone https://www.github.com/odoo/odoo --depth 1 --branch 10.0 $INSTALL/
-   then
-    echo >&2
-    echo "Deployment halted here.  Unable to clone Odoo.";
-    exit 1
-  fi
-  sudo mkdir -p ~/.local/share/Odoo/addons/10.0
-else
-  if ! sudo git clone https://www.github.com/odoo/odoo --depth 1 --branch 11.0 $INSTALL/
-    then
-    echo >&2
-    echo "Deployment halted here.  Unable to clone Odoo.";
-    exit 1
-  fi
-  sudo mkdir -p ~/.local/share/Odoo/addons/11.0
+if ! sudo git clone https://www.github.com/odoo/odoo --depth 1 --branch 11.0 $INSTALL/
+  then
+  echo >&2
+  echo "Deployment halted here.  Unable to clone Odoo.";
+  exit 1
 fi
+sudo mkdir -p ~/.local/share/Odoo/addons/11.0
 sudo chown -R $ODOO_USER:$ODOO_USER $USER_HOME/*
 
 # Create Odoo conf file
