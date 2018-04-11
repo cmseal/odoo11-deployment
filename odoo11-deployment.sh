@@ -11,7 +11,7 @@
 #You can install Odoo 10, if you wish...
 ODOO_VERSION="11"
 
-if [$ODOO_VERSION != 10 && $ODOO_VERSION != 11 ]; then
+if [$ODOO_VERSION != "10" && $ODOO_VERSION != "11" ]; then
   echo "Odoo version is invalid, please enter either 10 or 11"
   exit 1
 fi
