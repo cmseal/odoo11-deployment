@@ -55,6 +55,17 @@ sudo pip3 install pypdf2 Babel passlib Werkzeug decorator python-dateutil pyyaml
 # Install other packages
 sudo apt-get install node-clean-css node-less python-gevent -y
 
+# Install wkhtmltopdf and shortcuts
+sudo wget https://downloads.wkhtmltopdf.org/0.12/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb
+sudo gdebi --n wkhtmltox-0.12.1_linux-trusty-amd64.deb
+sudo ln -s /usr/local/bin/wkhtmltopdf /usr/bin
+sudo ln -s /usr/local/bin/wkhtmltoimage /usr/bin
+
+# Create Odoo user and setup sudo
+sudo adduser $ODOO_USER --quiet --disabled-password --gecos ""
+sudo adduser $ODOO_USER sudo
+sudo echo "$ODOO_USER ALL=(ALL) NOPASSWD:ALL" | sudo EDITOR='tee -a' visudo
+
 # Install Apache, PHP and enable mods
 sudo apt-get install apache2 php7.0 libapache2-mod-php7.0 php7.0-xmlrpc xfonts-75dpi -y
 sudo /etc/init.d/apache2 start
@@ -69,32 +80,13 @@ sudo a2enmod proxy_balancer
 sudo a2enmod proxy_connect
 sudo a2enmod proxy_html
 sudo a2dissite 000-default
-sudo mkdir /var/lib/odoo
-sudo chown -R odoo:root /var/lib/odoo
-sudo mkdir /var/log/odoo
-sudo touch /var/log/odoo/odoo.log
-sudo chown -R odoo:root /var/log/odoo
-sudo chown -R odoo:adm /var/log/apache2
-sudo service apache2 reload
-
-# Install wkhtmltopdf and shortcuts
-sudo wget https://downloads.wkhtmltopdf.org/0.12/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb
-sudo gdebi --n wkhtmltox-0.12.1_linux-trusty-amd64.deb
-sudo ln -s /usr/local/bin/wkhtmltopdf /usr/bin
-sudo ln -s /usr/local/bin/wkhtmltoimage /usr/bin
-
-# Create Odoo user and setup sudo
-sudo adduser $ODOO_USER --quiet --disabled-password --gecos ""
-sudo adduser $ODOO_USER sudo
-sudo echo "$ODOO_USER ALL=(ALL) NOPASSWD:ALL" | sudo EDITOR='tee -a' visudo
-
-# Create log folder
 sudo mkdir /var/log/$ODOO_USER
 sudo chown $ODOO_USER:$ODOO_USER /var/log/$ODOO_USER
+sudo service apache2 reload
 
 # Install Odoo
-if [$ODOO_VERSION == 10]; then
-  if ! sudo git clone https://www.github.com/odoo/odoo --depth 1 --branch 11.0 $INSTALL/
+if (($ODOO_VERSION == 10)); then
+  if ! sudo git clone https://www.github.com/odoo/odoo --depth 1 --branch 10.0 $INSTALL/
    then
     echo >&2
     echo "Deployment halted here.  Unable to clone Odoo.";
@@ -200,6 +192,7 @@ sudo chown root: /etc/init.d/$ODOO_CONFIG
 
 # Set Odoo service to start on boot
 sudo update-rc.d $ODOO_CONFIG defaults
+sudo service $ODOO_CONFIG start
 
 # Make vhost document root
 sudo mkdir -p /var/www/vhosts/$(hostname)/httpdocs
@@ -235,5 +228,11 @@ sudo mv ~/$(hostname).conf /etc/apache2/sites-available/
 sudo a2ensite $(hostname).conf
 sudo service apache2 reload
 
-echo "The Odoo server is up and running, with Apache."
+# Install Certbot and create SSL certs, along with redirecting
+sudo add-apt-repository ppa:certbot/certbot -y
+sudo apt-get update
+sudo apt-get install python-certbot-apache -y
+sudo certbot --apache --agree-tos --register-unsafely-without-email -n --redirect -d $URL
+
+echo "The Odoo server is up and running, with Apache and HTTPS"
 
