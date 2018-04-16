@@ -1,5 +1,5 @@
 # Odoo11 Deployment
-Bash script to deploy Odoo 11 and fully configured Apache
+Bash script to deploy Odoo 11 and fully configured Apache, with SSL cert from LetsEncrypt, on Ubuntu 16.04 LTS.
 
 ## Usage:
 <pre>
