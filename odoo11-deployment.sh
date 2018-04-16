@@ -90,6 +90,7 @@ cat <<EOF > ~/$ODOO_CONFIG.conf
 [options]
 This is the password that allows database operations:
 admin_passwd = ${ODOO_ADMIN}
+xmlrpc_interface = 127.0.0.1
 xmlrpc_port = ${ODOO_PORT}
 logfile = /var/log/odoo/odoo.log
 EOF
